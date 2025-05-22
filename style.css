@@ -1,0 +1,56 @@
+/* 聊天室樣式 */
+.chat-messages {
+    height: 400px;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.message {
+    margin-bottom: 1rem;
+    max-width: 80%;
+}
+
+.message-content {
+    padding: 0.75rem;
+    border-radius: 1rem;
+    background-color: #f8f9fa;
+}
+
+.message-left {
+    margin-right: auto;
+}
+
+.message-right {
+    margin-left: auto;
+}
+
+.message-right .message-content {
+    background-color: #007bff;
+    color: white;
+}
+
+.message p {
+    margin-bottom: 0.25rem;
+}
+
+.message small {
+    font-size: 0.75rem;
+}
+
+/* 滾動條美化 */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡易聊天室</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">聊天室</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chat-messages" ref="messageContainer">
+                            <div v-for="(message, index) in messages" :key="index" 
+                                 :class="['message', message.sender === currentUser ? 'message-right' : 'message-left']">
+                                <div class="message-content">
+                                    <strong>{{ message.sender }}:</strong>
+                                    <p>{{ message.text }}</p>
+                                    <small class="text-muted">{{ message.time }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="input-group">
+                            <input type="text" class="form-control" v-model="newMessage" 
+                                   @keyup.enter="sendMessage" placeholder="輸入訊息...">
+                            <button class="btn btn-primary" @click="sendMessage">發送</button>
+                        </div>
+                        <div class="mt-2">
+                            <input type="text" class="form-control" v-model="currentUser" 
+                                   placeholder="你的名字" @change="saveUsername">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <!-- 自定義 JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
