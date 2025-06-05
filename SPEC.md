@@ -1,12 +1,13 @@
 # 即時聊天室專案規格書
 
 ## 專案目標
-建立一個基於純前端技術的即時聊天應用，可以讓使用者透過瀏覽器進行即時通訊。專案設計以簡單易用為主，適合部署在 GitHub Pages 上使用。
+建立一個基於去中心化技術的即時聊天應用，可以讓使用者透過瀏覽器進行即時通訊。專案設計以簡單易用為主，特色是採用 P2P 架構，不需要自建後端伺服器。
 
 ## 技術架構
 - 前端框架：Vue.js 3 (CDN 版本)
 - UI 框架：Bootstrap 5
-- 後端服務：Firebase Realtime Database
+- 資料同步：GUN.js (去中心化資料庫)
+- 儲存方案：IndexedDB (本地資料儲存)
 - 部署平台：GitHub Pages
 
 ## 目前已實現功能
@@ -16,15 +17,24 @@
    - [x] 訊息時間戳記
    - [x] 左右對齊區分自己和他人的訊息
    - [x] 自動滾動到最新訊息
+   - [x] 訊息自動排序
 
 2. 用戶功能
    - [x] 設定用戶名稱
    - [x] 本地儲存用戶名稱（localStorage）
+   - [x] 自訂用戶頭像
+   - [x] 頭像即時更換
 
 3. 介面設計
    - [x] 響應式設計（支援手機和桌面）
    - [x] 美化的訊息氣泡
    - [x] 客製化滾動條樣式
+   - [x] 頭像點擊互動效果
+
+4. P2P 功能
+   - [x] 去中心化訊息同步
+   - [x] 離線資料儲存
+   - [x] 自動消除重複訊息
 
 ## 待開發功能
 1. 聊天功能擴充
@@ -44,6 +54,7 @@
    - [ ] 基本的訊息過濾
    - [ ] 限制訊息長度
    - [ ] 防洪水訊息機制
+   - [ ] 頭像大小限制（目前限制 1MB）
 
 ## 檔案結構
 ```
@@ -54,41 +65,56 @@
 ```
 
 ## 關鍵配置
-1. Firebase 配置
+1. GUN.js 配置
 ```javascript
-const firebaseConfig = {
-    databaseURL: "https://simple-chat-demo-2025-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
+const gun = Gun({
+    peers: ['https://gun-manhattan.herokuapp.com/gun'], // 使用公共 relay peer
+    localStorage: false // 使用 indexedDB 替代 localStorage
+});
 ```
 
 2. 資料結構
 ```javascript
 message: {
-    sender: string,    // 發送者名稱
-    text: string,      // 訊息內容
-    time: string      // 發送時間
+    id: string,         // 訊息唯一識別碼
+    sender: string,     // 發送者名稱
+    text: string,       // 訊息內容
+    timestamp: number,  // 發送時間戳記
+    avatar: string,     // 發送者頭像（Base64）
+    time: string       // 格式化的時間字串
 }
 ```
 
 ## 已知問題
-1. Firebase 連線可能不穩定，需要加入錯誤處理機制
+1. P2P 網路連線可能不穩定，需要考慮增加更多 relay peers
 2. 訊息量大時可能有效能問題，需要考慮分頁或虛擬滾動
 3. 缺乏訊息發送狀態顯示
+4. 頭像使用 Base64 儲存可能會占用較多儲存空間
 
 ## 後續優化方向
-1. 新增使用者認證系統
-2. 實作訊息已讀狀態
+1. 新增 P2P 身份認證
+2. 實作訊息加密
 3. 加入群組聊天功能
 4. 新增訊息搜尋功能
 5. 支援更多種類的媒體訊息（如語音、影片）
 6. 加入訊息編輯功能
+7. 優化頭像儲存方式（考慮使用 IPFS）
 
 ## 部署注意事項
-1. 確保 Firebase 設定正確
-2. 檢查 CORS 設定
+1. 確保 GUN.js relay peers 可以訪問
+2. 檢查瀏覽器的 IndexedDB 權限
 3. 確認 CDN 資源可用性
+4. 建議配置多個 relay peers 以提高穩定性
 
 ## 開發指南
-1. 克隆專案後，直接用瀏覽器開啟 index.html 即可開始開發
-2. 更改 Firebase 配置時需要在 app.js 中更新
+1. 克隆專案後，需要透過 HTTP 伺服器訪問（如 Live Server）
+2. 更改 GUN.js 配置時需要在 app.js 中更新 peers 列表
 3. 樣式修改請在 style.css 中進行
+4. 建議在開發時使用瀏覽器的無痕模式測試多使用者互動
+
+## 版本歷史
+### 2025-06-05
+- 從 Firebase 遷移至 GUN.js
+- 新增用戶頭像功能
+- 優化訊息排序機制
+- 增加頭像大小限制

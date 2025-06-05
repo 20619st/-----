@@ -21,6 +21,9 @@
                         <div class="chat-messages" ref="messageContainer">
                             <div v-for="(message, index) in messages" :key="index" 
                                  :class="['message', message.sender === currentUser ? 'message-right' : 'message-left']">
+                                <img :src="message.avatar || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'" 
+                                     class="message-avatar" :alt="message.sender"
+                                     @click="message.sender === currentUser && triggerAvatarUpload()">
                                 <div class="message-content">
                                     <strong>{{ message.sender }}:</strong>
                                     <p>{{ message.text }}</p>
@@ -36,18 +39,26 @@
                             <button class="btn btn-primary" @click="sendMessage">發送</button>
                         </div>
                         <div class="mt-2">
-                            <input type="text" class="form-control" v-model="currentUser" 
+                            <input type="text" class="form-control mb-2" v-model="currentUser" 
                                    placeholder="你的名字" @change="saveUsername">
                         </div>
+                        <!-- 隱藏的檔案上傳輸入框 -->
+                        <input type="file" ref="avatarInput" 
+                               accept="image/*" 
+                               style="display: none" 
+                               @change="handleAvatarChange">
                     </div>
                 </div>
             </div>
         </div>
     </div>    <!-- Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.js"></script>
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <!-- GUN.js -->
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/lib/radix.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/lib/radisk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/lib/store.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/lib/rindexed.js"></script>
     <!-- 自定義 JavaScript -->
     <script src="app.js"></script>
 </body>
